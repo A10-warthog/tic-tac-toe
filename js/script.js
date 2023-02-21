@@ -12,6 +12,9 @@ const GameBoard = (() => {
   return { getBoard, printBoard, resetBoard, updateBoard };
 })();
 
+// Controller module
+const Controller = (() => {})();
+
 // Player factory
 const Player = (name, mark) => {
   let turn = false;
