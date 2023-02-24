@@ -8,7 +8,7 @@ const DOM = (() => {
     gameChoice: document.querySelector(".game__choice"),
     gameEndBtn: document.querySelector(".game__end"),
     gameResult: document.querySelector(".game__result"),
-    currentPlayer: document.querySelector(".game__current");
+    currentPlayer: document.querySelector(".game__current"),
     gameBtn: this.gamePlay.querySelectorAll("button"),
     eListen(elm, type, func) {
       elm.addEventListener(type, func);
@@ -19,27 +19,30 @@ const DOM = (() => {
     classToggle(elm, cls) {
       elm.classList.toggle(cls);
     },
-     classAdd(elm, cls) {
+    classAdd(elm, cls) {
       elm.classList.add(cls);
     },
     elmAttr(elm, attr) {
       return elm.getAttribute(attr);
     },
-    
+    render(board) {
+      for (let i = 0; i < gameBtn.length; i++) {
+        if (board[i] === null) gameBtn[i].textContent = "";
+        else gameBtn[i].textContent = board[i];
+      }
+    };
+
   };
 })();
 
 const GameBoard = (() => {
-  const gameBoard = [];
-  gameBoard.length = 9;
-  gameBoard.fill(null);
+  const gameBoard = Array(9).fill(null);
   const getBoard = () => [...gameBoard];
-  const printBoard = () => console.log(gameBoard);
-  const resetBoard = () => gameBoard.fill(null);
+  const resetBoard = () => Array(9).fill(null);
   const updateBoard = (mark, index) => {
     gameBoard[index] = mark;
   };
-  return { getBoard, printBoard, resetBoard, updateBoard };
+  return { getBoard, resetBoard, updateBoard };
 })();
 
 // Player factory
