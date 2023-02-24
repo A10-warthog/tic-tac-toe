@@ -13,17 +13,19 @@ const GameBoard = (() => {
 })();
 
 // Player factory
-const Player = (name, mark) => {
-  let turn = false;
-  const getName = () => name;
-  const getMark = () => mark;
-  // use to check player turn to play
-  const getTurn = () => turn;
-  // make current player unable to play
-  const changeTurn = () => {
-    turn = !turn;
+const Player = (name, type, mark) => {
+  let playerName = name;
+  let playerType = type;
+  const getName = () => playerName;
+  const setName = (name) => {
+    playerName = name;
   };
-  return { getName, getMark, getTurn, changeTurn };
+  const getMark = () => mark;
+  const getType = () => playerType;
+  const setType = (type) => {
+    playerType = type;
+  };
+  return { getName, getMark, setName, getType, setType };
 };
 
 // Controller module
