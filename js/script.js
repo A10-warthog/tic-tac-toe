@@ -31,7 +31,6 @@ const DOM = (() => {
         else gameBtn[i].textContent = board[i];
       }
     };
-
   };
 })();
 
@@ -50,11 +49,11 @@ const Player = (name, type, mark) => {
   let playerName = name;
   let playerType = type;
   const getName = () => playerName;
+  const getMark = () => mark;
+  const getType = () => playerType;
   const setName = (name) => {
     playerName = name;
   };
-  const getMark = () => mark;
-  const getType = () => playerType;
   const setType = (type) => {
     playerType = type;
   };
@@ -64,4 +63,9 @@ const Player = (name, type, mark) => {
 // Controller module
 const Controller = (() => {
   const playerObj = {};
+  const updateBoard = (player, index) => {
+    if (GameBoard.getBoard()[index] === null) {
+      GameBoard.updateBoard(player.getMake(), index);
+    }
+  };
 })();
