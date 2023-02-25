@@ -1,0 +1,19 @@
+body,
+p,
+h1 {
+  margin: 0;
+  padding: 0;
+}
+:root {
+  --bg-c: #7dd8d4;
+}
+
+.game {
+  min-height: 100vh;
+  max-width: 100vw;
+  display: grid;
+  grid-template-rows: 0.15fr 1fr;
+  gap: 1rem;
+  justify-self: center;
+  background-color: var(--bg-c);
+}
