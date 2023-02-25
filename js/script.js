@@ -2,14 +2,14 @@
 
 const DOM = (() => {
   return {
-    dataName: document.querySelectorAll('[data-name]'),
-    gameBox: document.querySelector('.game__box'),
-    gamePlay: document.querySelector('.game__play'),
-    gameChoice: document.querySelector('.game__choice'),
-    gameEndBtn: document.querySelector('.game__end'),
-    gameResult: document.querySelector('.game__result'),
-    currentPlayer: document.querySelector('.game__current'),
-    gameBtn: this.gamePlay.querySelectorAll('button'),
+    dataName: document.querySelectorAll("[data-name]"),
+    gameBox: document.querySelector(".game__box"),
+    gamePlay: document.querySelector(".game__play"),
+    gameChoice: document.querySelector(".game__choice"),
+    gameEndBtn: document.querySelector(".game__end"),
+    gameResult: document.querySelector(".game__result"),
+    currentPlayer: document.querySelector(".game__current"),
+    gameBtn: this.gamePlay.querySelectorAll("button"),
     restartBtn: this.gameEndBtn.firstElementChild,
     eListen(elm, type, func) {
       elm.addEventListener(type, func);
@@ -28,7 +28,7 @@ const DOM = (() => {
     },
     render(board) {
       for (let i = 0; i < gameBtn.length; i++) {
-        if (board[i] === null) gameBtn[i].textContent = '';
+        if (board[i] === null) gameBtn[i].textContent = "";
         else gameBtn[i].textContent = board[i];
       }
     };
@@ -63,8 +63,8 @@ const Player = (name, type, mark) => {
 
 // Controller module
 const Controller = (() => {
-  const player1 = Player('Player 1', '', 'X');
-  const player2 = Player('Player 2', '', 'O');
+  const player1 = Player("Player 1", "", "X");
+  const player2 = Player("Player 2", "", "O");
   const player = {};
   const active = [player1];
   const updateBoard = (player, index) => {
@@ -93,16 +93,28 @@ const Controller = (() => {
   };
   // change player's turn
   const playerTurn = (player) =>
-    (player.getName() === player1.getName() ? player2 : player1);
+    player.getName() === player1.getName() ? player2 : player1;
   // only change active player on condition true
   const takeTurn = (player, val) => {
     const returnPlayer = updateBoard(player, val);
     if (returnPlayer !== undefined) active[0] = playerTurn(player);
     DOM.render(GameBoard.getBoard());
-  }
+  };
   // reset whole game
   const playAgain = () => {
     active[0] = player1;
     GameBoard.resetBoard();
-  }
+  };
+  // helper function to remove event
+  const onBtnClick = (event) => {
+    const btn = event.target;
+    const id = DOM.elmAttr(btn, "data-id");
+    takeTurn(active[0], +id);
+    playRound();
+  };
+  // gets id from target btn 
+  const humanTurn = () => {
+    DOM.eListen(DOM.gamePlay, "click", onBtnClick);
+  };
+  const aiTurn = () => { takeTurn(active[0], lowAiMove()); }
 })();
