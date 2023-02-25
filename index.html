@@ -7,9 +7,22 @@
     <title>Tic-Tac-Toe</title>
   </head>
   <body>
+    <!--Game container-->
     <div class="game">
       <h1 class="game__title"></h1>
-      <div class="game__choice"></div>
+      <!--Game mode-->
+      <div class="game__choice">
+        <button class="game__single" data-name="single" data-type="human ai">
+          Single Player
+        </button>
+        <button class="game__double" data-name="double" data-type="human human">
+          Two Player
+        </button>
+        <button class="game__both-comp" data-name="comp-only" data-type="ai ai">
+          Both Computer
+        </button>
+      </div>
+      <!--Game-->
       <div class="game__box"></div>
     </div>
   </body>
