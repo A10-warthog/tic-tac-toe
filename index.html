@@ -23,7 +23,33 @@
         </button>
       </div>
       <!--Game-->
-      <div class="game__box"></div>
+      <div class="game__box game--none">
+        <!--Game text-->
+        <div class="game__txt">
+          <p class="game__result">&nbsp;</p>
+          <p class="game__current">&nbsp;</p>
+        </div>
+        <!--Game board made with buttons-->
+        <div class="game__play">
+          <button data-id="0"></button>
+          <button data-id="1"></button>
+          <button data-id="2"></button>
+          <button data-id="3"></button>
+          <button data-id="4"></button>
+          <button data-id="5"></button>
+          <button data-id="6"></button>
+          <button data-id="7"></button>
+          <button data-id="8"></button>
+        </div>
+        <!--Game end buttons-->
+        <div class="game__end">
+          <button class="game__play-again game--hidden" data-name="restart">
+            Play Again
+          </button>
+          <button class="game__reset" data-name="reset">Reset All</button>
+        </div>
+      </div>
     </div>
+    <script src="js/script.js"></script>
   </body>
 </html>
