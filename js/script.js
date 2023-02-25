@@ -10,6 +10,7 @@ const DOM = (() => {
     gameResult: document.querySelector(".game__result"),
     currentPlayer: document.querySelector(".game__current"),
     gameBtn: this.gamePlay.querySelectorAll("button"),
+    restartBtn: this.gameEndBtn.firstElementChild,
     eListen(elm, type, func) {
       elm.addEventListener(type, func);
     },
@@ -62,10 +63,30 @@ const Player = (name, type, mark) => {
 
 // Controller module
 const Controller = (() => {
-  const playerObj = {};
+  const player1 = Player("Player 1", "", "X");
+  const player2 = Player("Player 2", "", "O");
+  const active = [player1];
+  const _player = {};
   const updateBoard = (player, index) => {
     if (GameBoard.getBoard()[index] === null) {
       GameBoard.updateBoard(player.getMake(), index);
     }
   };
+  const isWinner = (board) => {
+    const cases = [[0, 1, 2],
+                   [3, 4, 5],
+                   [6, 7, 8],
+                   [0, 3, 6], 
+                   [1, 4, 7],
+                   [2, 5, 8], 
+                   [0, 4, 8],
+                   [2, 4, 6]];
+    for (let i = 0; i < cases.length; i++) {
+        const [a, b, c] = cases[i];
+        if(board[a] === board[b] && board[a] === board[c]) 
+          return _player[board[a]];
+      }
+  }
+
+
 })();
