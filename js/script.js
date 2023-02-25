@@ -2,14 +2,14 @@
 
 const DOM = (() => {
   return {
-    dataName: document.querySelectorAll("[data-name]"),
-    gameBox: document.querySelector(".game__box"),
-    gamePlay: document.querySelector(".game__play"),
-    gameChoice: document.querySelector(".game__choice"),
-    gameEndBtn: document.querySelector(".game__end"),
-    gameResult: document.querySelector(".game__result"),
-    currentPlayer: document.querySelector(".game__current"),
-    gameBtn: this.gamePlay.querySelectorAll("button"),
+    dataName: document.querySelectorAll('[data-name]'),
+    gameBox: document.querySelector('.game__box'),
+    gamePlay: document.querySelector('.game__play'),
+    gameChoice: document.querySelector('.game__choice'),
+    gameEndBtn: document.querySelector('.game__end'),
+    gameResult: document.querySelector('.game__result'),
+    currentPlayer: document.querySelector('.game__current'),
+    gameBtn: this.gamePlay.querySelectorAll('button'),
     restartBtn: this.gameEndBtn.firstElementChild,
     eListen(elm, type, func) {
       elm.addEventListener(type, func);
@@ -28,7 +28,7 @@ const DOM = (() => {
     },
     render(board) {
       for (let i = 0; i < gameBtn.length; i++) {
-        if (board[i] === null) gameBtn[i].textContent = "";
+        if (board[i] === null) gameBtn[i].textContent = '';
         else gameBtn[i].textContent = board[i];
       }
     };
@@ -63,30 +63,46 @@ const Player = (name, type, mark) => {
 
 // Controller module
 const Controller = (() => {
-  const player1 = Player("Player 1", "", "X");
-  const player2 = Player("Player 2", "", "O");
+  const player1 = Player('Player 1', '', 'X');
+  const player2 = Player('Player 2', '', 'O');
+  const player = {};
   const active = [player1];
-  const _player = {};
   const updateBoard = (player, index) => {
     if (GameBoard.getBoard()[index] === null) {
       GameBoard.updateBoard(player.getMake(), index);
+      return player;
     }
   };
+  // returns result of a round
   const isWinner = (board) => {
-    const cases = [[0, 1, 2],
-                   [3, 4, 5],
-                   [6, 7, 8],
-                   [0, 3, 6], 
-                   [1, 4, 7],
-                   [2, 5, 8], 
-                   [0, 4, 8],
-                   [2, 4, 6]];
+    const cases = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
     for (let i = 0; i < cases.length; i++) {
-        const [a, b, c] = cases[i];
-        if(board[a] === board[b] && board[a] === board[c]) 
-          return _player[board[a]];
-      }
+      const [a, b, c] = cases[i];
+      if (board[a] === board[b] && board[a] === board[c])
+        return player[board[a]];
+    }
+  };
+  // change player's turn
+  const playerTurn = (player) =>
+    (player.getName() === player1.getName() ? player2 : player1);
+  // only change active player on condition true
+  const takeTurn = (player, val) => {
+    const returnPlayer = updateBoard(player, val);
+    if (returnPlayer !== undefined) active[0] = playerTurn(player);
+    DOM.render(GameBoard.getBoard());
   }
-
-
+  // reset whole game
+  const playAgain = () => {
+    active[0] = player1;
+    GameBoard.resetBoard();
+  }
 })();
