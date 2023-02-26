@@ -76,6 +76,8 @@ const Controller = (() => {
   const player2 = Player("Player 2", "", "O");
   const playerObj = {};
   const active = [player1];
+  // setTimeout for computer move
+  let aiTimeout;
   const updateBoard = (player, index) => {
     if (!playerObj.hasOwnProperty(player.getMark())) {
       playerObj[player.getMark()] = player.getName();
@@ -120,6 +122,7 @@ const Controller = (() => {
     active[0] = player1;
     GameBoard.resetBoard();
   };
+
   // helper function to remove event
   const onBtnClick = (event) => {
     const btn = event.target;
@@ -160,9 +163,7 @@ const Controller = (() => {
     if (active[0].getType() === "human") humanTurn();
     if (active[0].getType() === "ai") {
       DOM.eRemove(DOM.gamePlay, "click", onBtnClick);
-      setTimeout(() => {
-        aiTurn();
-      }, 700);
+      aiTimeout = setTimeout(aiTurn, 700);
     }
   };
   // option for play mode
@@ -184,6 +185,7 @@ const Controller = (() => {
       DOM.classToggle(DOM.gameChoice, "game--none");
       DOM.classToggle(DOM.gameBox, "game--none");
     }
+    clearTimeout(aiTimeout);
     playAgain();
     DOM.render(GameBoard.getBoard());
     DOM.gameResult.textContent = "\xA0";
