@@ -2,15 +2,18 @@
 /* eslint-disable no-useless-return */
 // GameBoard module
 const DOM = (() => ({
-  dataName: document.querySelectorAll("[data-name]"),
   gameBox: document.querySelector(".game__box"),
   gamePlay: document.querySelector(".game__play"),
   gameChoice: document.querySelector(".game__choice"),
   gameEndBtn: document.querySelector(".game__end"),
   gameResult: document.querySelector(".game__result"),
   currentPlayer: document.querySelector(".game__current"),
-  gameBtn: this.gamePlay.querySelectorAll("button"),
-  restartBtn: this.gameEndBtn.firstElementChild,
+  gameBtn() {
+    return this.gamePlay.querySelectorAll("button");
+  },
+  restartBtn() {
+    return this.gameEndBtn.firstElementChild;
+  },
   eListen(elm, type, func) {
     elm.addEventListener(type, func);
   },
@@ -27,9 +30,9 @@ const DOM = (() => ({
     return elm.getAttribute(attr);
   },
   render(board) {
-    for (let i = 0; i < this.gameBtn.length; i += 1) {
-      if (board[i] === null) this.gameBtn[i].textContent = "";
-      else this.gameBtn[i].textContent = board[i];
+    for (let i = 0; i < this.gameBtn().length; i += 1) {
+      if (board[i] === null) this.gameBtn()[i].textContent = "";
+      else this.gameBtn()[i].textContent = board[i];
     }
   },
 }))();
@@ -37,7 +40,9 @@ const DOM = (() => ({
 const GameBoard = (() => {
   const gameBoard = Array(9).fill(null);
   const getBoard = () => [...gameBoard];
-  const resetBoard = () => Array(9).fill(null);
+  const resetBoard = () => {
+    gameBoard.fill(null);
+  };
   const updateBoard = (mark, index) => {
     gameBoard[index] = mark;
   };
@@ -56,18 +61,27 @@ const Player = (name, type, mark) => {
   const setType = (type) => {
     playerType = type;
   };
-  return { getName, getMark, setName, getType, setType };
+  return {
+    getName,
+    getMark,
+    setName,
+    getType,
+    setType,
+  };
 };
 
 // Controller module
 const Controller = (() => {
   const player1 = Player("Player 1", "", "X");
   const player2 = Player("Player 2", "", "O");
-  const player = {};
+  const playerObj = {};
   const active = [player1];
   const updateBoard = (player, index) => {
+    if (!playerObj.hasOwnProperty(player.getMark())) {
+      playerObj[player.getMark()] = player.getName();
+    }
     if (GameBoard.getBoard()[index] === null) {
-      GameBoard.updateBoard(player.getMake(), index);
+      GameBoard.updateBoard(player.getMark(), index);
       return player;
     }
   };
@@ -85,13 +99,15 @@ const Controller = (() => {
     ];
     for (let i = 0; i < cases.length; i++) {
       const [a, b, c] = cases[i];
-      if (board[a] === board[b] && board[a] === board[c])
-        return player[board[a]];
+      if (board[a] === board[b] && board[a] === board[c]) {
+        return playerObj[board[a]];
+      }
     }
   };
   // change player's turn
   const playerTurn = (player) =>
     player.getName() === player1.getName() ? player2 : player1;
+
   // only change active player on condition true
   const takeTurn = (player, val) => {
     const returnPlayer = updateBoard(player, val);
@@ -129,20 +145,25 @@ const Controller = (() => {
     const roundResult = isWinner(GameBoard.getBoard());
     if (roundResult !== undefined) {
       DOM.gameResult.textContent = `Winner is ${roundResult}`;
-      DOM.classToggle(DOM.restartBtn, "game--hidden");
+      DOM.classToggle(DOM.restartBtn(), "game--hidden");
       DOM.eRemove(DOM.gamePlay, "click", onBtnClick);
       playAgain();
       return;
     }
     if (GameBoard.getBoard().every((elm) => elm !== null) === true) {
-      DOM.classToggle(DOM.restartBtn, "game--hidden");
+      DOM.classToggle(DOM.restartBtn(), "game--hidden");
       DOM.gameResult.textContent = "It's a draw";
       playAgain();
       return;
     }
-    DOM.currentPlayer.textContent = `Turn :${active[0].getName()}`;
+    DOM.currentPlayer.textContent = `Turn : ${active[0].getName()}`;
     if (active[0].getType() === "human") humanTurn();
-    if (active[0].getType() === "ai") aiTurn();
+    if (active[0].getType() === "ai") {
+      DOM.eRemove(DOM.gamePlay, "click", onBtnClick);
+      setTimeout(() => {
+        aiTurn();
+      }, 700);
+    }
   };
   // option for play mode
   DOM.eListen(DOM.gameChoice, "click", (event) => {
@@ -152,7 +173,7 @@ const Controller = (() => {
     player1.setType(type[0]);
     player2.setType(type[1]);
     DOM.classToggle(DOM.gameBox, "game--none");
-    DOM.classToggle(DOM.restartBtn, "game--hidden");
+    DOM.classToggle(DOM.gameChoice, "game--none");
     // starts the round
     playRound();
   });
@@ -166,7 +187,7 @@ const Controller = (() => {
     playAgain();
     DOM.render(GameBoard.getBoard());
     DOM.gameResult.textContent = "\xA0";
-    DOM.classAdd(DOM.restartBtn, "game--hidden");
+    DOM.classAdd(DOM.restartBtn(), "game--hidden");
     if (DOM.elmAttr(btn, "data-name") === "restart") playRound();
   });
 })();
